@@ -18,11 +18,6 @@ Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
 
 Set-Alias cd cdh -Option AllScope
 
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
-    Import-Module "$ChocolateyProfile"
-}
-
 # PWSH linq
 
 function skip {
@@ -213,7 +208,7 @@ function get-column {
         [Parameter(Mandatory, Position = 0)]
         [Int32] $index
     )
-    ($value.Split([System.StringSplitOptions]::RemoveEmptyEntries))[$index]    
+    $value.Split([System.Char[]]$null, [System.StringSplitOptions]::RemoveEmptyEntries)[$index]
 }
 
 function newObj {
