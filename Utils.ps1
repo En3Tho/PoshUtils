@@ -372,9 +372,40 @@ function Nuget-PackToLocal {
 
 function Nuget-PushToLocal {
     param (
+        [Parameter(Mandatory)]
+        [ValidateNotNullorEmpty()]
         [string]$path
     )
     dotnet nuget push --source "$Env:NugetPath\$Env:NugetLocalServerName" $path
+}
+
+function Get-Git-PR-Diff {
+    param (
+        [Parameter(Mandatory)]
+        [ValidateNotNullorEmpty()]
+        [String] $baseNameOrPrefix,
+
+        [Parameter(Mandatory)]
+        [ValidateNotNullorEmpty()]
+        [String] $destinationNameOrBaseName,
+
+        [String] $destinationNameOrNothing
+    )
+    
+    # base destination
+    $baseName = $baseNameOrPrefix
+    $destinationName = $destinationNameOrBaseName
+
+    if ([String]::IsNullOrEmpty($destinationNameOrNothing) -eq $false) {
+        # prefix base destination
+        $prefix = $baseNameOrPrefix
+        $baseName = "$prefix/$destinationNameOrBaseName"
+        $destinationName = "$prefix/$destinationNameOrNothing"
+    }
+    
+    git checkout $baseName
+    git pull
+    git merge --no-ff --no-commit $destinationName
 }
 
 # Powershell .Net syntax
@@ -397,6 +428,9 @@ function Nuget-PushToLocal {
 
 # using namespace
 # using namespace NamespaceName                  using namespace System.IO
+
+# specifically typed expression
+# [[Type]]expr                                   [System.Char[]]$null or [Func[object,bool]]{ param($x) $x -gt 5 })
 
 # Loading types
 # Add-Type -Path "path to dll"
