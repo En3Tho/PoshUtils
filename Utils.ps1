@@ -1,4 +1,17 @@
-# Registrations
+# Registration
+
+function Run-Step([string] $Description, [ScriptBlock]$script)
+{
+  if ($true) {
+    Write-Host  -NoNewline "Loading " $Description.PadRight(25)
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    & $script
+    Write-Host "... $($sw.Elapsed) `u{2705}" # checkmark emoji
+  }
+  else {
+    & $script
+  }
+}
 
 Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
     param($commandName, $wordToComplete, $cursorPosition)
@@ -406,6 +419,54 @@ function Get-Git-PR-Diff {
     git checkout $baseName
     git pull
     git merge --no-ff --no-commit $destinationName
+}
+
+# Invoke-WebRequest shortcuts
+
+function Http-Get {
+    param(
+        [Parameter(Mandatory, Position = 0)]
+        [System.Uri] $Uri,
+        [Parameter(Position = 1)][Alias("H")]
+        [System.Collections.IDictionary] $Headers
+    )
+    Invoke-WebRequest -Uri $Uri -Method "GET" -Headers $Headers
+}
+
+function Http-Post {
+    param(
+        [Parameter(Mandatory, Position = 0)]
+        [System.Uri] $Uri,
+        [Parameter(Mandatory, Position = 1)][Alias("B")]
+        [System.Object] $body,
+        [Parameter(Position = 2)][Alias("H")]
+        [System.Collections.IDictionary] $Headers
+
+    )
+    Invoke-WebRequest -Uri $Uri -Method "POST" -Body $body -Headers $Headers
+}
+
+function Http-Put {
+    param(
+        [Parameter(Mandatory, Position = 0)]
+        [System.Uri] $Uri,
+        [Parameter(Mandatory, Position = 1)][Alias("B")]
+        [System.Object] $Body,
+        [Parameter(Position = 2)][Alias("H")]
+        [System.Collections.IDictionary] $Headers
+
+    )
+    Invoke-WebRequest -Uri $Uri -Method "PUT" -Body $Body -Headers $Headers
+}
+
+function Http-Delete {
+    param(
+        [Parameter(Mandatory, Position = 0)]
+        [System.Uri] $Uri,
+        [Parameter(Position = 1)][Alias("H")]
+        [System.Collections.IDictionary] $Headers
+    )
+    Invoke-WebRequest -Uri $Uri -Method "DELETE" -Headers $Headers
 }
 
 # Powershell .Net syntax
