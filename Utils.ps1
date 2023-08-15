@@ -493,5 +493,11 @@ function Http-Delete {
 # specifically typed expression
 # [[Type]]expr                                   [System.Char[]]$null or [Func[object,bool]]{ param($x) $x -gt 5 })
 
+# array syntax
+# expr, expr, expr                               $x = 1, 2, 3
+
+# hashtable syntax
+# @{ key1 = expr; key2 = expr }                  $x = { "Name" = "Utils"; "Extension" = "ps1" }
+
 # Loading types
 # Add-Type -Path "path to dll"
